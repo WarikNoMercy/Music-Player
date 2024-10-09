@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BluesWaves</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+</head>
+
+<body>
+<div class="container">
+    <header>
+        <h1>BluesWaves</h1>
+        <nav>
+                <a href=""><i class="fas fa-home"></i> Home</a>
+                <a href="/music-files"><i class="fas fa-book"></i> Catalog</a>
+                <a href="/home"><i class="fas fa-upload"></i> Upload</a>
+            </nav>
+
+    </header>
+    <main>
+    	<img class="rounded-2xl mx-auto" src="https://media.tenor.co/images/bf102e55a9e1450c15f8221c18a11ffc/tenor.gif" />
+        <p>Welcome to your music app. Enjoy your favorite tunes!</p>
+    	
+    	<p style="color: green;" th:text="${successMessage}"></p>
+    	
+        <p style="color: red;" th:text="${errorMessage}"></p>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+    		<input type="file" name="file" id="fileInput">
+    		<button type="submit">Upload File</button>
+		</form>
+    </main>
+    
+    
+    <footer>
+        <p>&copy; 2024 BluesWave</p>
+    </footer>
+
+</body>
+</html>
