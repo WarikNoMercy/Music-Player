@@ -14,6 +14,7 @@ import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpHeaders;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
@@ -112,7 +113,7 @@ public class HomepageController {
 		//File cred = gdSecretKeys.getFile();
 		GoogleClientSecrets secrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(credentialsFolder.getInputStream()));
 	    flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, secrets, SCOPES)
-	                .setDataStoreFactory(new FileDataStoreFactory(credentialsFolderFile.getFile())).build();
+	    .setDataStoreFactory(new FileDataStoreFactory(credentialsFolderFile.getFile())).build();
 	}
 	
 	@GetMapping(value= {"/"})
@@ -126,20 +127,20 @@ public class HomepageController {
 				boolean tokenValid = credential.refreshToken();
 				if(tokenValid) {
 					Oauth2 oauth2 = new Oauth2.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
-				            .setApplicationName("Music player")
-				            .build();
+				.setApplicationName("Music player")
+				.build();
 
 				    Userinfoplus userinfo = oauth2.userinfo().get().execute();
 
 				    String email = userinfo.getEmail();
 				    String name = userinfo.getName();
 				    User user = userRepository.findByEmail(email);
-	                if (user == null) {
-	                    user = new User();
-	                    user.setEmail(email);
-	                    user.setUsername(name);  
-	                    userRepository.save(user);
-	                }
+	    if (user == null) {
+	        user = new User();
+	        user.setEmail(email);
+	        user.setUsername(name);  
+	        userRepository.save(user);
+	    }
 				
 					isAuthorized = true;
 				}
@@ -190,16 +191,16 @@ public class HomepageController {
 	    Credential cred = flow.loadCredential(USER_IDENTIFIER_KEY);
 	    
 	    Drive drive = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, cred)
-	            .setApplicationName("Music player")
-	            .build();
+	.setApplicationName("Music player")
+	.build();
 	    
 	    
 	    String folderId = createFolderForUser(drive);
 	    
 	    FileList result = drive.files().list()
-	            .setQ("'" + folderId + "' in parents and mimeType contains 'audio/'")
-	            .setFields("nextPageToken, files(id, name, mimeType, webContentLink)")
-	            .execute();
+	.setQ("'" + folderId + "' in parents and mimeType contains 'audio/'")
+	.setFields("nextPageToken, files(id, name, mimeType, webContentLink)")
+	.execute();
 	    
 	    List<com.google.api.services.drive.model.File> files = result.getFiles();
 	    
@@ -208,9 +209,8 @@ public class HomepageController {
 	    } else {
 	    	
 	    	for (com.google.api.services.drive.model.File file : files) {
-	    		
 	    		String proxyLink = "/download-file/" + file.getId();
-	            file.setWebContentLink(proxyLink);
+	file.setWebContentLink(proxyLink);
 
 	        }
 	        model.addAttribute("musicFiles", files);
@@ -220,12 +220,39 @@ public class HomepageController {
 	}
 	
 
+	@PostMapping("/delete-song/{fileId}")
+	public String deleteSong(@PathVariable String fileId, Model model) {
+	    try {
+
+	        // Загружаем пользовательские учетные данные
+	        Credential cred = flow.loadCredential(USER_IDENTIFIER_KEY);
+	        Drive drive = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, cred)
+	    .setApplicationName("Music player")
+	    .build();
+	        
+	        System.out.println(fileId);
+	        
+	        Song song = musicRepository.findByDriveId(fileId);
+	        drive.files().delete(fileId).execute();
+	        
+
+	        musicRepository.delete(song);
+
+	        model.addAttribute("successMessage", "Трек успешно удален.");
+	    } catch (IOException e) {
+	        model.addAttribute("errorMessage", "Ошибка при удалении файла: " + e.getMessage());
+	    }
+
+	    return "redirect:/music-files";
+	}
+
+	
 	@GetMapping("/download-file/{fileId}")
 	public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String fileId, HttpServletRequest request) throws IOException {
 	    Credential cred = flow.loadCredential(USER_IDENTIFIER_KEY);
 	    Drive drive = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, cred)
-	            .setApplicationName("Music player")
-	            .build();
+	.setApplicationName("Music player")
+	.build();
 
 	    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 	    drive.files().get(fileId).executeMediaAndDownloadTo(outputStream);
@@ -240,6 +267,7 @@ public class HomepageController {
 	    String range = request.getHeader("Range");
 	    if (range == null) {
 	        headers.setContentDisposition(ContentDisposition.inline().filename("audio.mp3").build());
+	        headers.setContentLength(fileBytes.length);
 	        return new ResponseEntity<>(resource, headers, HttpStatus.OK);
 	    } else {
 	        String[] ranges = range.replace("bytes=", "").split("-");
@@ -256,6 +284,9 @@ public class HomepageController {
 	        return new ResponseEntity<>(rangeResource, headers, HttpStatus.PARTIAL_CONTENT);
 	    }
 	}
+
+	
+
 
 	
 	@PostMapping(value= {"/upload"})
@@ -276,12 +307,12 @@ public class HomepageController {
 		FileContent mediaContent = new FileContent("audio/mpeg", filePath);
         try {
         	com.google.api.services.drive.model.File uploadedFile = drive.files().create(fileMetadata, mediaContent)
-                .setFields("id, parents")
-                .execute();
+    .setFields("id, parents")
+    .execute();
         	
         	Oauth2 oauth2 = new Oauth2.Builder(HTTP_TRANSPORT, JSON_FACTORY, cred)
-    	            .setApplicationName("Music player")
-    	            .build();
+    	.setApplicationName("Music player")
+    	.build();
 
     	    Userinfoplus userinfo = oauth2.userinfo().get().execute();
     	    String email = userinfo.getEmail();
@@ -289,6 +320,7 @@ public class HomepageController {
         	Song song = new Song();
         	String fileName = multipartFile.getOriginalFilename();
         	String [] artSong = fileName.split("-");
+        	song.setDriveId(uploadedFile.getId());
         	song.setUser(user);
         	song.setArtist(artSong[0]);
         	song.setTitle(artSong[1].substring(0,artSong[1].lastIndexOf('.')));
@@ -296,21 +328,22 @@ public class HomepageController {
         	
         	musicRepository.save(song);
         	model.addAttribute("successMessage", "Файл успешно загружен!");
-            return "index"; 
+        		return "index"; 
         } catch (IOException e) {
-            model.addAttribute("errorMessage", "Error uploading file: " + e.getMessage());
-            return "index";
+        		model.addAttribute("errorMessage", "Error uploading file: " + e.getMessage());
+        		return "index";
         }
         
 	}
+	
 	
 	private String createFolderForUser(Drive driveService) throws IOException {
 		
 		
 		Credential cred = flow.loadCredential(USER_IDENTIFIER_KEY);
 		Oauth2 oauth2 = new Oauth2.Builder(HTTP_TRANSPORT, JSON_FACTORY, cred)
-	            .setApplicationName("Music player")
-	            .build();
+	.setApplicationName("Music player")
+	.build();
 
 	    Userinfoplus userinfo = oauth2.userinfo().get().execute();
 	    String email = userinfo.getEmail();
@@ -318,24 +351,24 @@ public class HomepageController {
         String folderName = "Music player files: " + email;
 
         FileList result = driveService.files().list()
-                .setQ("mimeType='application/vnd.google-apps.folder' and name='" + folderName + "'")
-                .setFields("files(id, name)")
-                .execute();
+    .setQ("mimeType='application/vnd.google-apps.folder' and name='" + folderName + "'")
+    .setFields("files(id, name)")
+    .execute();
 
         List<com.google.api.services.drive.model.File> folders = result.getFiles();
 
         if (folders != null && !folders.isEmpty()) {
-            return folders.get(0).getId();
+        	return folders.get(0).getId();
         } else {
-            com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
-            fileMetadata.setName(folderName);
-            fileMetadata.setMimeType("application/vnd.google-apps.folder");
-
-            com.google.api.services.drive.model.File folder = driveService.files().create(fileMetadata)
-                    .setFields("id")
-                    .execute();
-
-            return folder.getId();
+			com.google.api.services.drive.model.File fileMetadata = new com.google.api.services.drive.model.File();
+			fileMetadata.setName(folderName);
+			fileMetadata.setMimeType("application/vnd.google-apps.folder");
+			
+			com.google.api.services.drive.model.File folder = driveService.files().create(fileMetadata)
+			        .setFields("id")
+			        .execute();
+			
+			return folder.getId();
         }
     }
 	

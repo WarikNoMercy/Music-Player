@@ -17,7 +17,7 @@ public class Song {
 	private Integer id;
 	
 	private String fileName;
-	
+	private String driveId;
 	private String title;
 	private String artist;
 	
@@ -70,5 +70,13 @@ public class Song {
     public void setUser(User user) {
         this.user = user;
     }
+
+	public String getDriveId() {
+		return driveId;
+	}
+
+	public void setDriveId(String driveId) {
+		this.driveId = driveId;
+	}
 	
 }

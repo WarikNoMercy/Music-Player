@@ -15,6 +15,14 @@ header {
 
 }
 
+main {
+    flex: 1;
+    max-width: 1900px; /* Увеличил ширину основного контейнера */
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
 h1{
 	margin-left: 10px;	
@@ -43,9 +51,36 @@ nav a i {
 }
 
 nav a:hover {
-    border-bottom-color: #fff; /* Цвет подчеркивания при наведении */
+    border-bottom-color: #fff; 
 }
 
+
+.logout-form {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+}
+
+.logout-btn {
+    background-color: #ff6347;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #ff4500;
+}
+
+.logout-btn i {
+    margin-right: 8px;
+}
 
 main {
 	flex:1;
@@ -70,6 +105,86 @@ button.play-button:hover {
     background-color: #45a049;
 }
 
+.play-btn {
+    border-radius: 50%; 
+    background-color: #4CAF50; 
+    color: white; 
+    border: none; 
+    display: block; 
+    font-size: 16px;
+    justify-content: center; 
+    align-items: center; 
+    cursor: pointer; 
+    transition: background-color 0.3s; 
+}
+
+.play-btn:hover {
+    background-color: #45a049; 
+}
+
+.play-btn i {
+	font-size : 16px;
+	margin: 0;
+}
+
+.delete-btn {
+	display:block;
+    background-color: #ff4b5c;
+    border: none;
+    color: white;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s;
+    margin-left: 10px; 
+}
+
+.delete-btn:hover {
+	background-color: #ff1e36;
+}
+
+.delete-btn i {
+	font-size : 16px;
+	margin: 0;
+}
+        
+ul {
+	list-style: none;
+	padding: 0;
+}
+
+li {
+    background-color: #fff;
+    margin-bottom: 15px;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+li .track-info {
+    display: flex;
+    align-items: center;
+    width: 80%; /* Ограничиваем ширину контента внутри трека */
+    flex-grow: 1;
+}
+
+h3 {
+	margin: 0 10px 0 0;
+	flex-shrink: 0; /* Не дает названию сжиматься */
+    white-space: nowrap;
+}
+
+audio {
+	width: 100%;
+	max-width: 300px;
+}
+        
 footer {
     background-color: #1E90FF;
     color: #fff;

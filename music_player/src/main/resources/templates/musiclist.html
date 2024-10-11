@@ -15,10 +15,15 @@
     <header>
         <h1>BluesWaves</h1>
         <nav>
-            <a href="/"><i class="fas fa-home"></i> Home</a>
-            <a href="/music-files"><i class="fas fa-book"></i> Catalog</a> 
-            <a href="/"><i class="fas fa-upload"></i> Upload</a>
-        </nav>
+			<a href="/"><i class="fas fa-home"></i> Home</a>
+			<a href="/music-files"><i class="fas fa-book"></i> Catalog</a> 
+			<a href="/"><i class="fas fa-upload"></i> Upload</a>
+		</nav>
+		<form class="logout-form" th:action="@{/logout}" method="get">
+            <button type="submit" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </form>
     </header>
     <main>
         <h2>Your Music Files</h2>
@@ -26,23 +31,57 @@
        
         <p style="color: red;" th:text="${errorMessage}"></p>
         
-        <!-- Список музыкальных файлов -->
-        <div th:if="${musicFiles != null}">
-            <ul>
-                <li th:each="file : ${musicFiles}">
-                    <h3 th:text="${file.name}"></h3>
-                    <audio id="audio" controls>
-		                <source th:src="${file.webContentLink}" type="audio/mpeg">
-		                Your browser does not support the audio tag.
-		            </audio>
-                </li>
-            </ul>
+        <div class="audio-player">
+            <audio id="main-audio-player" controls>
+                <source id="audio-source" src="" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
         </div>
+
+        <!-- Список треков с кнопками "Play" и "Delete" -->
+        <ul>
+            <li th:each="file : ${musicFiles}">
+                <span th:text="${file.name}"></span>
+                
+                <!-- Кнопка Play 
+                <a th:href="@{/music-files(selectedFileId=${file.id})}">
+	                    <button class="play-btn">
+	                        <i class="fas fa-play"></i>
+	                    </button>
+	                    <button class="play-btn" th:attr="onclick='playTrack(\'' + ${file.webContentLink} + '\')'">Play</button>
+	                </a> -->
+
+	           
+
+                <button class="play-btn" th:attr="onclick='playTrack(\'/download-file/' + ${file.id} + '\')'">
+		            <i class="fas fa-play"></i>
+		        </button>
+		                
+                <!-- Кнопка Delete -->
+                <form th:action="@{/delete-song/{fileId}(fileId=${file.id})}" method="post">
+                    <button type="submit" class="delete-btn">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </form>
+            </li>
+        </ul>
     </main>
     
     <footer>
         <p>&copy; 2024 BluesWaves</p>
     </footer>
 </div>
+
+<script>
+	function playTrack(url) {
+	    console.log(url); // Для отладки
+	    var player = document.getElementById('main-audio-player');
+	    player.src = url;
+	    player.play().catch(function(error) {
+	        console.error('Error playing audio:', error);
+	    });
+	}
+</script>
+
 </body>
 </html>

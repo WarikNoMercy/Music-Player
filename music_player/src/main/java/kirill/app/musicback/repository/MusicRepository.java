@@ -5,5 +5,5 @@ import kirill.app.musicback.model.Song;
 
 public interface MusicRepository extends JpaRepository<Song, Long> {
 	
-	
+	Song findByDriveId(String driveId);
 }
