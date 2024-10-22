@@ -1,77 +1,69 @@
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #2d3748;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f9;
     margin: 0;
     padding: 0;
 }
 
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Стили для шапки */
 header {
-    background-color:#1E90FF;
+    background-color: #1E90FF;
+    padding: 20px;
     color: #fff;
-    padding: 0 em;
-    text-align: left;
     display: flex;
     justify-content: space-between;
-
-}
-
-main {
-    flex: 1;
-    max-width: 1900px; /* Увеличил ширину основного контейнера */
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-h1{
-	margin-left: 10px;	
-}
-nav {
-	display:flex;
-    justify-content: center;
     align-items: center;
-    flex : 1;
 }
 
+h1 {
+    font-size: 2rem;
+    margin: 0;
+}
+
+nav {
+    display: flex;
+    gap: 15px;
+}
 
 nav a {
-
-    text-decoration: none;
     color: #fff;
-    padding: 0.5em 1em;
-    margin-left:0  1em;
-    border-bottom: 2px solid transparent; /* Начальное подчеркивание */
-    transition: border-bottom-color 0.3s ease; /* Плавное изменение цвета подчеркивания */
-    
-}
-
-nav a i {
-    margin-right: 0.5em;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
 }
 
 nav a:hover {
-    border-bottom-color: #fff; 
+    background-color: #fff;
+    color: #1E90FF;
 }
 
-
 .logout-form {
-    position: absolute;
-    top: 10px;
-    right: 20px;
+	margin : 0;
+    display: flex;
+    align-items : center;
 }
 
 .logout-btn {
     background-color: #ff6347;
     border: none;
     color: white;
-    padding: 10px 15px;
-    border-radius: 20px;
+    padding: 10px 20px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1rem;
     display: flex;
     align-items: center;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease;
+    margin : 0;
 }
 
 .logout-btn:hover {
@@ -82,88 +74,83 @@ nav a:hover {
     margin-right: 8px;
 }
 
+/* Стили для основного контента */
 main {
-	flex:1;
-    max-width: 500px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-top: 50px;
 }
 
-button.play-button {
-    background-color: #4CAF50;
-    color: #fff;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
+main img {
+    max-width: 300px;
+    border-radius: 16px;
 }
 
-button.play-button:hover {
-    background-color: #45a049;
+main p {
+    font-size: 1.2rem;
+    margin: 20px 0;
+    color: #333;
 }
 
-.play-btn {
-    border-radius: 50%; 
-    background-color: #4CAF50; 
-    color: white; 
-    border: none; 
-    display: block; 
-    font-size: 16px;
-    justify-content: center; 
-    align-items: center; 
-    cursor: pointer; 
-    transition: background-color 0.3s; 
+form {
+    margin-top: 20px;
 }
 
-.play-btn:hover {
-    background-color: #45a049; 
-}
-
-.play-btn i {
-	font-size : 16px;
-	margin: 0;
-}
-
-.delete-btn {
-	display:block;
-    background-color: #ff4b5c;
-    border: none;
-    color: white;
+#fileInput {
     padding: 10px;
-    border-radius: 50%;
+    border: 2px solid #1E90FF;
+    border-radius: 8px;
+    width: 60%;
+    max-width: 400px;
+    margin: 10px 0;
+    font-size: 1rem;
+}
+
+button[type="submit"] {
+    background-color: #1E90FF;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
-    justify-content: center;
-    align-items: center;
-    transition: background-color 0.3s;
-    margin-left: 10px; 
+    transition: background-color 0.3s ease;
 }
 
-.delete-btn:hover {
-	background-color: #ff1e36;
+button[type="submit"]:hover {
+    background-color: #1c7ed6;
 }
 
-.delete-btn i {
-	font-size : 16px;
-	margin: 0;
-}
-        
+/* Стили для списка треков на странице MusicList */
 ul {
-	list-style: none;
-	padding: 0;
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
 }
 
 li {
     background-color: #fff;
     margin-bottom: 15px;
+    width: 80%; /* Ограничиваем ширину треков */
+    max-width: 600px;
     padding: 20px;
     border-radius: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+li.track-item {
+    background-color: #fff;
+    margin-bottom: 15px;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex; /* Flex-контейнер для выравнивания названия и кнопок */
+    justify-content: space-between;
+    align-items: center; /* Выравнивание по вертикали */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -174,21 +161,67 @@ li .track-info {
     flex-grow: 1;
 }
 
-h3 {
-	margin: 0 10px 0 0;
-	flex-shrink: 0; /* Не дает названию сжиматься */
-    white-space: nowrap;
+.play-btn {
+    border-radius: 50%;
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.play-btn:hover {
+    background-color: #1E90FF;
+}
+
+.delete-btn {
+    border-radius: 50%;
+    background-color: #ff4b5c;
+    margin-left: 10px;
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+
+.delete-btn:hover {
+    background-color: #ff1e36;
+}
+
+/* Стили для аудиоплеера */
+.audio-player {
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
 }
 
 audio {
-	width: 100%;
-	max-width: 300px;
+    width: 100%;
+    max-width: 300px;
 }
-        
+
+/* Стили для подвала */
 footer {
     background-color: #1E90FF;
     color: #fff;
-    padding: 1em;
+    padding: 15px;
     text-align: center;
-    margin-top:auto;
+    margin-top: auto;
+    width: 100%;
+}
+
+footer p {
+    margin: 0;
 }

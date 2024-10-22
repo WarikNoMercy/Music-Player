@@ -349,14 +349,13 @@ public class HomepageController {
 	    String email = userinfo.getEmail();
 	    
         String folderName = "Music player files: " + email;
-
+        
         FileList result = driveService.files().list()
     .setQ("mimeType='application/vnd.google-apps.folder' and name='" + folderName + "'")
     .setFields("files(id, name)")
     .execute();
 
         List<com.google.api.services.drive.model.File> folders = result.getFiles();
-
         if (folders != null && !folders.isEmpty()) {
         	return folders.get(0).getId();
         } else {
